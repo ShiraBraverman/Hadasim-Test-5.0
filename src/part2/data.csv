@@ -1,0 +1,11 @@
+Person_Id,First_Name,Last_Name,Gender,Father_Id,Mother_Id,Spouse_Id
+1,David,Levi,Male,2,3,4
+2,Shira,Levi,Female,,1,5
+3,Aviva,Levi,Female,,1,6
+4,Yoav,Levi,Male,1,2,7
+5,John,Doe,Male,,2,8
+6,Mary,Johnson,Female,,1,9
+7,Ari,Levi,Male,1,2,10
+8,Emily,Doe,Female,,5,11
+9,Mike,Smith,Male,,6,12
+10,Nina,Levi,Female,,4,13
