@@ -1,0 +1,93 @@
+{
+  "customers": [
+    {
+      "id": 1,
+      "name": "דנה לוי",
+      "email": "dana@example.com",
+      "phoneNumber": "0501234567",
+      "password": "1234"
+    }
+  ],
+  "customerOrders": [
+    {
+      "id": 1,
+      "customerId": 1,
+      "goods": [
+        {
+          "productName": "חלב",
+          "quantity": 2
+        },
+        {
+          "productName": "לחם",
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-04",
+      "status": "בוצעה"
+    }
+  ],
+  "suppliers": [
+    {
+      "id": 1,
+      "companyName": "ספק א",
+      "phoneNumber": "123456789",
+      "representativeName": "יוסי כהן",
+      "email": "yossi@supplier.com",
+      "password": "1234",
+      "goodsList": [
+        {
+          "productName": "חלב",
+          "pricePerUnit": 5,
+          "minQuantity": 10
+        },
+        {
+          "productName": "לחם",
+          "pricePerUnit": 2,
+          "minQuantity": 20
+        }
+      ]
+    }
+  ],
+  "goods": [
+    {
+      "productName": "חלב",
+      "pricePerUnit": 5,
+      "minQuantity": 10,
+      "currentQuantity": 3,
+      "minStoreQuantity": 5,
+      "imageUrl": "/uploads/1712345678910.webp"
+    },
+    {
+      "productName": "לחם",
+      "pricePerUnit": 2,
+      "minQuantity": 20,
+      "currentQuantity": 1,
+      "minStoreQuantity": 4,
+      "imageUrl": "/uploads/1712345678911.webp"
+    }
+  ],
+  "orders": [
+    {
+      "id": 1,
+      "supplierId": 1,
+      "status": "הושלמה",
+      "goods": [
+        {
+          "productName": "חלב",
+          "quantity": 5
+        },
+        {
+          "productName": "לחם",
+          "quantity": 10
+        }
+      ],
+      "orderDate": "2025-04-04",
+      "completedDate": "2025-04-05"
+    }
+  ],
+  "admin": {
+    "username": "admin",
+    "email": "admin@shop.com",
+    "password": "1234"
+  }
+}
