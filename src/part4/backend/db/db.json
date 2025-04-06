@@ -21,15 +21,70 @@
       "customerId": 1,
       "goods": [
         {
-          "productName": "חלב",
+          "goodId": 1,
           "quantity": 2
         },
         {
-          "productName": "לחם",
+          "goodId": 2,
           "quantity": 1
         }
       ],
-      "orderDate": "2025-04-04",
+      "orderDate": "2025-04-04"
+    },
+    {
+      "id": 2,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 1,
+          "quantity": 3
+        },
+        {
+          "goodId": 3,
+          "quantity": 8
+        }
+      ],
+      "orderDate": "2025-04-06",
+      "status": "בוצעה"
+    },
+    {
+      "id": 3,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 2,
+          "quantity": 2
+        }
+      ],
+      "orderDate": "2025-04-06",
+      "status": "בוצעה"
+    },
+    {
+      "id": 4,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 3,
+          "quantity": 3
+        }
+      ],
+      "orderDate": "2025-04-06",
+      "status": "בוצעה"
+    },
+    {
+      "id": 5,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 3,
+          "quantity": 2
+        },
+        {
+          "goodId": 4,
+          "quantity": 3
+        }
+      ],
+      "orderDate": "2025-04-06",
       "status": "בוצעה"
     }
   ],
@@ -59,7 +114,7 @@
       "productName": "חלב",
       "pricePerUnit": 5,
       "minQuantity": 10,
-      "currentQuantity": 3,
+      "currentQuantity": 12,
       "imageUrl": "/uploads/1712345678910.webp"
     },
     {
@@ -67,16 +122,56 @@
       "pricePerUnit": "5",
       "minQuantity": 20,
       "id": 2,
-      "currentQuantity": 3,
+      "currentQuantity": 23,
       "imageUrl": "/uploads/1712345678911.webp"
     },
     {
-      "productName": "יךל",
-      "pricePerUnit": "10",
+      "productName": "בצל",
+      "pricePerUnit": "20",
+      "minQuantity": "5",
+      "currentQuantity": 76,
+      "imageUrl": "/uploads/1743966491723.jpg",
+      "id": 3
+    },
+    {
+      "productName": "עגבניה",
+      "pricePerUnit": "23",
+      "minQuantity": "56",
+      "currentQuantity": 53,
+      "imageUrl": "/uploads/1743966514514.jpg",
+      "id": 4
+    },
+    {
+      "productName": "מלפפון",
+      "pricePerUnit": "5",
       "minQuantity": "20",
-      "imageUrl": null,
-      "id": 3,
-      "currentQuantity": "12"
+      "currentQuantity": "23",
+      "imageUrl": "/uploads/1743966535524.jpg",
+      "id": 5
+    },
+    {
+      "productName": "פרורי לחם",
+      "pricePerUnit": "32",
+      "minQuantity": "41",
+      "currentQuantity": "100",
+      "imageUrl": "/uploads/1743966560254.jpg",
+      "id": 6
+    },
+    {
+      "productName": "גבינה",
+      "pricePerUnit": "40",
+      "minQuantity": "20",
+      "currentQuantity": "56",
+      "imageUrl": "/uploads/1743966587624.jpg",
+      "id": 7
+    },
+    {
+      "productName": "גבינה צהובה",
+      "pricePerUnit": "30",
+      "minQuantity": "10",
+      "currentQuantity": "56",
+      "imageUrl": "/uploads/1743966605774.jpg",
+      "id": 8
     }
   ],
   "orders": [
@@ -99,6 +194,7 @@
     }
   ],
   "admin": {
+    "id": 1,
     "name": "admin",
     "email": "admin@shop.com",
     "password": "1234"

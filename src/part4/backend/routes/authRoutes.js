@@ -29,9 +29,14 @@ router.post("/register", (req, res) => {
   }
 
   if (userType === "supplier") {
-    const { companyName, phoneNumber, representativeName, goodsList = [] } = req.body;
+    const {
+      companyName,
+      phoneNumber,
+      representativeName,
+      goodsList = [],
+    } = req.body;
 
-    if (db.suppliers.some(s => s.email === email)) {
+    if (db.suppliers.some((s) => s.email === email)) {
       return res.status(409).json({ message: "כתובת אימייל כבר קיימת" });
     }
 
@@ -47,13 +52,15 @@ router.post("/register", (req, res) => {
 
     db.suppliers.push(newSupplier);
     writeDB(db);
-    return res.status(201).json({ message: "ספק נרשם בהצלחה", id: newSupplier.id });
+    return res
+      .status(201)
+      .json({ message: "ספק נרשם בהצלחה", id: newSupplier.id });
   }
 
   if (userType === "customer") {
     const { name, phoneNumber } = req.body;
 
-    if (db.customers.some(c => c.email === email)) {
+    if (db.customers.some((c) => c.email === email)) {
       return res.status(409).json({ message: "כתובת אימייל כבר קיימת" });
     }
 
@@ -67,7 +74,9 @@ router.post("/register", (req, res) => {
 
     db.customers.push(newCustomer);
     writeDB(db);
-    return res.status(201).json({ message: "לקוח נרשם בהצלחה", id: newCustomer.id });
+    return res
+      .status(201)
+      .json({ message: "לקוח נרשם בהצלחה", id: newCustomer.id });
   }
 
   return res.status(400).json({ message: "סוג משתמש לא נתמך לרישום" });
@@ -85,14 +94,18 @@ router.post("/:userType/login", (req, res) => {
   }
 
   if (userType === "suppliers") {
-    const supplier = db.suppliers.find(s => s.email === email && s.password === password);
+    const supplier = db.suppliers.find(
+      (s) => s.email === email && s.password === password
+    );
     if (supplier)
       return res.json({ message: "ספק התחבר בהצלחה", id: supplier.id });
     return res.status(401).json({ message: "אימייל או סיסמה שגויים" });
   }
 
   if (userType === "customers") {
-    const customer = db.customers.find(c => c.email === email && c.password === password);
+    const customer = db.customers.find(
+      (c) => c.email === email && c.password === password
+    );
     if (customer)
       return res.json({ message: "לקוח התחבר בהצלחה", id: customer.id });
     return res.status(401).json({ message: "אימייל או סיסמה שגויים" });

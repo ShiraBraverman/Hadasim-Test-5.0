@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Typography, Grid, Button, TextField } from "@mui/material";
-import ProductItem from "../customer/ProductItem";
 
 const SupplierGoods = ({ supplierId }) => {
   const [goods, setGoods] = useState([]);
@@ -107,7 +106,7 @@ const SupplierGoods = ({ supplierId }) => {
         הוסף מוצר חדש
       </Button>
 
-      <Grid container spacing={4}>
+      {/* <Grid container spacing={4}>
         {goods.map((item, index) => (
           <Grid key={index} item xs={12} sm={6} md={4}>
             <ProductItem
@@ -117,7 +116,7 @@ const SupplierGoods = ({ supplierId }) => {
             />
           </Grid>
         ))}
-      </Grid>
+      </Grid> */}
     </Container>
   );
 };

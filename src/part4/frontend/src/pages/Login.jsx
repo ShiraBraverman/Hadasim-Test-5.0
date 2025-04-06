@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Container,
@@ -16,14 +16,14 @@ const Login = () => {
   const { setUser } = useUser();
   const navigate = useNavigate();
   // const [formData, setFormData] = useState({ email: "", password: "" });
-  // const [formData, setFormData] = useState({
-  //   email: "yossi@supplier.com",
-  //   password: "1234",
-  // });
   const [formData, setFormData] = useState({
-    email: "admin@shop.com",
+    email: "yossi@supplier.com",
     password: "1234",
   });
+  // const [formData, setFormData] = useState({
+  //   email: "admin@shop.com",
+  //   password: "1234",
+  // });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -46,6 +46,9 @@ const Login = () => {
       );
 
       const user = response.data;
+
+      console.log("user")
+      console.log(user)
 
       localStorage.setItem(
         "loggedUser",

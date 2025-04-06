@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Container, Typography, Button } from "@mui/material";
 import axios from "axios";
-import ManagerGoodsList from "../components/manager/ManagerGoodsList";
-import ManagerOrdersList from "../components/manager/ManagerOrdersList";
+import ManagerGoodsList from "../components/manager/ManagerGoodsList.jsx";
+import ManagerOrdersList from "../components/manager/ManagerOrdersList.jsx";
 import ManagerPendingOrders from "../components/manager/ManagerPendingOrders.jsx";
-import ManagerCompletedOrders from "../components/manager/ManagerCompletedOrders";
+import ManagerCompletedOrders from "../components/manager/ManagerCompletedOrders.jsx";
 
 const ManagerHome = () => {
   const [goods, setGoods] = useState([]);

@@ -34,10 +34,13 @@ const Navbar = () => {
 
   useEffect(() => {
     if (user?.id && user?.userType) {
+      console.log("user");
+      console.log(user);
+
       const type = user.userType.toLowerCase();
       const endpoint = `http://localhost:3001/api/${
-        type === "admin" ? "admin" : type + "s"
-      }/${user.id}`;
+        type === "admin" ? "admin" : `${type}s/${user.id}`
+      }`;
 
       axios
         .get(endpoint)
@@ -48,7 +51,7 @@ const Navbar = () => {
           alert("שגיאה בשליפת שם המשתמש:", err);
         });
     }
-  }, [user]);
+  }, [,user]);
 
   const handleLogout = () => {
     localStorage.removeItem("loggedUser");

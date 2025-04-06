@@ -3,7 +3,6 @@ import { Grid, Card, CardContent, Typography, Button } from "@mui/material";
 
 const ManagerOrdersList = ({ orders }) => {
   const acceptOrder = (orderId) => {
-    // לוגיקה לאישור הזמנה
     console.log(`Order ${orderId} accepted`);
   };
 

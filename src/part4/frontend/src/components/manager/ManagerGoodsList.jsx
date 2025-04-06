@@ -26,7 +26,7 @@ const ManagerGoodsList = ({ goods, fetchGoods }) => {
   const [newItemPrice, setNewItemPrice] = useState("");
   const [newItemMinQty, setNewItemMinQty] = useState("");
   const [selectedItem, setSelectedItem] = useState(null);
-  const [newItemImage, setNewItemImage] = useState(null); // מצב לתמונה שנבחרה
+  const [newItemImage, setNewItemImage] = useState(null);
 
   const handleSave = () => {
     fetch(`http://localhost:3001/api/goods/${selectedItem.id}`, {
@@ -38,14 +38,14 @@ const ManagerGoodsList = ({ goods, fetchGoods }) => {
         ...selectedItem,
         pricePerUnit: editedPrice,
         minQuantity: editedMinQty,
-        currentQuantity: selectedItem.currentQuantity, // נוסיף את הערך החדש של currentQuantity
+        currentQuantity: selectedItem.currentQuantity,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log("עדכון הצליח:", data);
         setOpenEditDialog(false);
-        fetchGoods(); // נטען את המוצרים מחדש לאחר השמירה
+        fetchGoods();
       })
       .catch((error) => {
         alert("שגיאה בעדכון:", error);
@@ -66,37 +66,36 @@ const ManagerGoodsList = ({ goods, fetchGoods }) => {
       });
   };
 
-  // פונקציה להעלות את התמונה
   const handleImageUpload = (image) => {
     const formData = new FormData();
-    formData.append("image", image); // שדות התמונה
+    formData.append("image", image);
 
     return fetch("http://localhost:3001/api/upload-image", {
       method: "POST",
       body: formData,
     })
       .then((response) => response.json())
-      .then((data) => data.imageUrl) // מחזירים את ה-URL של התמונה
+      .then((data) => data.imageUrl)
       .catch((error) => {
         console.error("שגיאה בהעלאת התמונה:", error);
         throw error;
       });
   };
 
-  // פונקציה להוסיף פריט חדש
   const handleAddNewItem = async () => {
     try {
       let imageUrl = null;
 
       if (newItemImage) {
-        imageUrl = await handleImageUpload(newItemImage); // העלאת התמונה ולקיחת ה-URL שלה
+        imageUrl = await handleImageUpload(newItemImage);
       }
 
       const newItemData = {
         productName: newItemName,
         pricePerUnit: newItemPrice,
         minQuantity: newItemMinQty,
-        imageUrl: imageUrl, // מוסיפים את ה-URL של התמונה
+        currentQuantity: "0",
+        imageUrl: imageUrl,
       };
 
       fetch("http://localhost:3001/api/goods", {

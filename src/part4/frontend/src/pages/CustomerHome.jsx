@@ -1,53 +1,33 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-  Container,
-  Typography,
-  Grid,
-  Card,
-  CardMedia,
-  CardContent,
-} from "@mui/material";
+import React, { useState } from "react";
+import { Button, Stack, Divider } from "@mui/material";
+import GoodList from "../components/customer/GoodList";
+import CartSummary from "../components/customer/CartSummary";
+import PreviousOrders from "../components/customer/PreviousOrders";
 
-const CustomerHome = () => {
-  const [goods, setGoods] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3001/api/goods") // עדכון לנתיב הנכון
-      .then((response) => setGoods(response.data))
-      .catch((error) => alert("Error fetching goods:", error));
-  }, []);
+const CustomerHome = ({ customerId }) => {
+  const [view, setView] = useState("products");
+  const [cart, setCart] = useState([]);
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        דף לקוח קצה
-      </Typography>
-      <Typography gutterBottom>
-        כאן תוכלו לצפות בכל המוצרים ולהוסיף לעגלה 🎁
-      </Typography>
+    <div style={{ padding: "20px" }}>
+      <Stack direction="row" spacing={2} mb={2}>
+        <Button variant={view === "products" ? "contained" : "outlined"} onClick={() => setView("products")}>
+          🛍 מוצרים
+        </Button>
+        <Button variant={view === "summary" ? "contained" : "outlined"} onClick={() => setView("summary")}>
+          📄 סיכום הזמנה
+        </Button>
+        <Button variant={view === "orders" ? "contained" : "outlined"} onClick={() => setView("orders")}>
+          📦 ההזמנות שלי
+        </Button>
+      </Stack>
 
-      <Grid container spacing={4}>
-        {goods.map((item, index) => (
-          <Grid key={index}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="200"
-                image={`http://localhost:3001${item.imageUrl}`} // עדכון כאן
-                alt={item.productName}
-              />
-              <CardContent>
-                <Typography variant="h6">{item.productName}</Typography>
-                <Typography>מחיר: ₪{item.pricePerUnit}</Typography>
-                <Typography>כמות מינימלית: {item.minQuantity}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
-    </Container>
+      <Divider sx={{ mb: 2 }} />
+
+      {view === "products" && <GoodList cart={cart} setCart={setCart} />}
+      {view === "summary" && <CartSummary cart={cart} setCart={setCart} customerId={customerId} />}
+      {view === "orders" && <PreviousOrders customerId={customerId} />}
+    </div>
   );
 };
 

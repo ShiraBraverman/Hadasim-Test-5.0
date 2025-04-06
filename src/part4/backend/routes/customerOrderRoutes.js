@@ -5,7 +5,6 @@ const router = express.Router();
 
 const DB_PATH = path.join(__dirname, "../db/db.json");
 
-// helper to read & write DB
 function readDB() {
   return JSON.parse(fs.readFileSync(DB_PATH));
 }
@@ -16,36 +15,64 @@ function writeDB(data) {
 
 router.post("/", (req, res) => {
   const { customerId, goods } = req.body;
+
+  if (!customerId || !goods || !Array.isArray(goods)) {
+    return res.status(400).json({ error: "נתונים חסרים או שגויים" });
+  }
+
   const db = readDB();
+
+  const customerExists = db.customers.find((c) => c.id === customerId);
+  if (!customerExists) {
+    return res.status(404).json({ error: "לקוח לא נמצא" });
+  }
+
+  // בדיקת תקינות מוצרים
+  for (let item of goods) {
+    const inventoryItem = db.goods.find((g) => g.id === item.goodId);
+    if (!inventoryItem) {
+      return res
+        .status(404)
+        .json({ error: `המוצר עם ID ${item.goodId} לא קיים במלאי` });
+    }
+
+    if (inventoryItem.currentQuantity < item.quantity) {
+      return res.status(400).json({
+        error: `אין מספיק כמות במלאי עבור המוצר ${inventoryItem.productName}. זמין: ${inventoryItem.currentQuantity}`,
+      });
+    }
+  }
 
   const newOrder = {
     id: db.customerOrders.length + 1,
     customerId,
     goods,
     orderDate: new Date().toISOString().split("T")[0],
-    status: "בוצעה"
+    status: "בוצעה",
   };
 
   db.customerOrders.push(newOrder);
 
-  // Update inventory
-  goods.forEach(item => {
-    const inventoryItem = db.goods.find(g => g.productName === item.productName);
+  // עדכון מלאי
+  goods.forEach((item) => {
+    const inventoryItem = db.goods.find((g) => g.id === item.goodId);
     if (inventoryItem) {
-      inventoryItem.currentQuantity = (inventoryItem.currentQuantity || 0) - item.quantity;
+      inventoryItem.currentQuantity -= item.quantity;
     }
   });
 
-  // Check for auto orders
-  goods.forEach(item => {
-    const inventoryItem = db.goods.find(g => g.productName === item.productName);
-    if (inventoryItem && inventoryItem.currentQuantity < inventoryItem.minStoreQuantity) {
-      // Find the cheapest supplier
+  // בדיקת צורך בהזמנה אוטומטית
+  goods.forEach((item) => {
+    const inventoryItem = db.goods.find((g) => g.id === item.goodId);
+    if (
+      inventoryItem &&
+      inventoryItem.currentQuantity < inventoryItem.minStoreQuantity
+    ) {
       let cheapestSupplier = null;
       let cheapestPrice = Infinity;
 
-      db.suppliers.forEach(supplier => {
-        const found = supplier.goodsList.find(g => g.productName === item.productName);
+      db.suppliers.forEach((supplier) => {
+        const found = supplier.goodsList.find((g) => g.goodId === item.goodId);
         if (found && found.pricePerUnit < cheapestPrice) {
           cheapestSupplier = supplier;
           cheapestPrice = found.pricePerUnit;
@@ -59,18 +86,21 @@ router.post("/", (req, res) => {
           status: "ממתין לאישור",
           goods: [
             {
-              productName: item.productName,
-              quantity: cheapestSupplier.goodsList.find(g => g.productName === item.productName).minQuantity
-            }
+              goodId: item.goodId,
+              productName: inventoryItem.productName,
+              quantity: cheapestSupplier.goodsList.find(
+                (g) => g.goodId === item.goodId
+              ).minQuantity,
+            },
           ],
           orderDate: new Date().toISOString().split("T")[0],
-          completedDate: null
+          completedDate: null,
         };
 
         db.orders.push(autoOrder);
-        console.log(`🔁 בוצעה הזמנה אוטומטית ל: ${item.productName}`);
+        console.log(`🔁 בוצעה הזמנה אוטומטית ל: ${inventoryItem.productName}`);
       } else {
-        console.warn(`❗ אין ספק שמספק את המוצר: ${item.productName}`);
+        console.warn(`❗ אין ספק שמספק את המוצר: ${inventoryItem.productName}`);
       }
     }
   });
