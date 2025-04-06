@@ -6,6 +6,13 @@
       "email": "dana@example.com",
       "phoneNumber": "0501234567",
       "password": "1234"
+    },
+    {
+      "id": 2,
+      "name": "Shira Braverman",
+      "phoneNumber": "0583265688",
+      "email": "shira7656@gmail.com",
+      "password": "1234"
     }
   ],
   "customerOrders": [
@@ -37,33 +44,39 @@
       "goodsList": [
         {
           "productName": "חלב",
-          "pricePerUnit": 5,
-          "minQuantity": 10
+          "pricePerUnit": 5
         },
         {
           "productName": "לחם",
-          "pricePerUnit": 2,
-          "minQuantity": 20
+          "pricePerUnit": 2
         }
       ]
     }
   ],
   "goods": [
     {
+      "id": 1,
       "productName": "חלב",
       "pricePerUnit": 5,
       "minQuantity": 10,
       "currentQuantity": 3,
-      "minStoreQuantity": 5,
       "imageUrl": "/uploads/1712345678910.webp"
     },
     {
       "productName": "לחם",
-      "pricePerUnit": 2,
+      "pricePerUnit": "5",
       "minQuantity": 20,
-      "currentQuantity": 1,
-      "minStoreQuantity": 4,
+      "id": 2,
+      "currentQuantity": 3,
       "imageUrl": "/uploads/1712345678911.webp"
+    },
+    {
+      "productName": "יךל",
+      "pricePerUnit": "10",
+      "minQuantity": "20",
+      "imageUrl": null,
+      "id": 3,
+      "currentQuantity": "12"
     }
   ],
   "orders": [
@@ -86,7 +99,7 @@
     }
   ],
   "admin": {
-    "username": "admin",
+    "name": "admin",
     "email": "admin@shop.com",
     "password": "1234"
   }

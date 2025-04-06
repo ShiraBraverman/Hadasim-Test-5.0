@@ -6,7 +6,7 @@ const OrdersList = () => {
 
   useEffect(() => {
     // יש להביא את ההזמנות מהשרת
-    fetch('/api/orders')
+    fetch('http://localhost:3001/api/orders')
       .then((response) => response.json())
       .then((data) => setOrders(data));
   }, []);

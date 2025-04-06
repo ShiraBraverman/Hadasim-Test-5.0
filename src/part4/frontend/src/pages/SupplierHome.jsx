@@ -1,41 +1,41 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { Container, Typography, Grid, Card, CardMedia, CardContent } from "@mui/material";
+import React, { useState } from "react";
+import { Container, Typography, Button, Box } from "@mui/material";
+import SupplierGoods from "../components/supplier/SupplierGoods";
+import SupplierOrders from "../components/supplier/SupplierOrders";
 
 const SupplierHome = () => {
-  const [goods, setGoods] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://localhost:3001/supplier-goods")  // נתיב שמציג את המוצרים של הספק
-      .then(response => setGoods(response.data))
-      .catch(error => console.error("Error fetching supplier goods:", error));
-  }, []);
+  const [view, setView] = useState(null);
+  const supplierId = localStorage.getItem("supplierId");
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>דף ספק</Typography>
-      <Typography gutterBottom>כאן תוכלו לעדכן את המוצרים שאתם מספקים 🛒</Typography>
+      <Typography variant="h4" gutterBottom>
+        דף ספק
+      </Typography>
+      <Typography gutterBottom>
+        כאן תוכלו לעדכן את המוצרים שלכם ולהתעדכן בהזמנות 🛒
+      </Typography>
 
-      <Grid container spacing={4}>
-        {goods.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="200"
-                image={item.imageUrl}
-                alt={item.productName}
-              />
-              <CardContent>
-                <Typography variant="h6">{item.productName}</Typography>
-                <Typography>מחיר: ₪{item.pricePerUnit}</Typography>
-                <Typography>כמות מינימלית: {item.minQuantity}</Typography>
-                {/* אפשרות לעדכון פרטי המוצר */}
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      <Box sx={{ display: "flex", gap: 2, mt: 2, mb: 4 }}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => setView("goods")}
+        >
+          ניהול מוצרים
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => setView("orders")}
+        >
+          צפייה בהזמנות
+        </Button>
+      </Box>
+
+      {/* הצגת הרכיב הרלוונטי לפי הבחירה */}
+      {view === "goods" && <SupplierGoods supplierId={supplierId} />}
+      {view === "orders" && <SupplierOrders />}
     </Container>
   );
 };

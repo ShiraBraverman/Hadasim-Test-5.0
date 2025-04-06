@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useParams, Link } from "react-router-dom";
 import {
   Container,
   TextField,
@@ -9,12 +9,21 @@ import {
   Alert,
 } from "@mui/material";
 import axios from "axios";
+import { useUser } from "../contest/UserContext";
 
 const Login = () => {
   const { userType } = useParams();
+  const { setUser } = useUser();
   const navigate = useNavigate();
-
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  // const [formData, setFormData] = useState({ email: "", password: "" });
+  // const [formData, setFormData] = useState({
+  //   email: "yossi@supplier.com",
+  //   password: "1234",
+  // });
+  const [formData, setFormData] = useState({
+    email: "admin@shop.com",
+    password: "1234",
+  });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -27,18 +36,28 @@ const Login = () => {
     try {
       const type = userType.toLowerCase();
 
-      const endpoint = `/api/auth/${type === "admin" ? "admin" : type + "s"}/login`;
-
+      const endpoint = `/api/auth/${
+        type === "admin" ? "admin" : type + "s"
+      }/login`;
 
       const response = await axios.post(
         `http://localhost:3001${endpoint}`,
         formData
       );
 
-      console.log("Login successful:", response.data);
+      const user = response.data;
+
+      localStorage.setItem(
+        "loggedUser",
+        JSON.stringify({ id: user.id, userType: type })
+      );
+
+      setUser({ id: user.id, userType: type });
+
+      console.log("Login successful:", user);
       navigate(`/${type}-home`);
     } catch (err) {
-      console.error("Login error:", err);
+      alert("Login error:", err);
       setError("התחברות נכשלה. בדוק את הפרטים ונסה שוב.");
     }
   };
@@ -86,6 +105,15 @@ const Login = () => {
         <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
           התחברות
         </Button>
+        <Typography align="center" sx={{ mt: 2 }}>
+          אין לך חשבון?{" "}
+          <Link
+            to={`/register/${userType}`}
+            style={{ textDecoration: "underline", color: "#1976d2" }}
+          >
+            הרשם כאן
+          </Link>
+        </Typography>
       </Box>
     </Container>
   );

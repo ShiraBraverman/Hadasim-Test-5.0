@@ -1,62 +1,90 @@
 import React, { useEffect, useState } from "react";
+import { Container, Typography, Button } from "@mui/material";
 import axios from "axios";
-import { Container, Typography, Grid, Card, CardMedia, CardContent } from "@mui/material";
+import ManagerGoodsList from "../components/manager/ManagerGoodsList";
+import ManagerOrdersList from "../components/manager/ManagerOrdersList";
+import ManagerPendingOrders from "../components/manager/ManagerPendingOrders.jsx";
+import ManagerCompletedOrders from "../components/manager/ManagerCompletedOrders";
 
 const ManagerHome = () => {
   const [goods, setGoods] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [view, setView] = useState("goods");
+
+  const fetchGoods = () => {
+    axios
+      .get("http://localhost:3001/api/goods")
+      .then((response) => setGoods(response.data))
+      .catch((error) => alert("Error fetching goods:", error));
+  };
+
+  const fetchOrders = () => {
+    axios
+      .get("http://localhost:3001/api/orders")
+      .then((response) => setOrders(response.data))
+      .catch((error) => alert("Error fetching orders:", error));
+  };
+  useEffect(() => {
+    fetchGoods();
+    fetchOrders();
+  }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:3001/goods")
-      .then(response => setGoods(response.data))
-      .catch(error => console.error("Error fetching goods:", error));
-
-    axios.get("http://localhost:3001/orders")
-      .then(response => setOrders(response.data))
-      .catch(error => console.error("Error fetching orders:", error));
-  }, []);
+    console.log(goods);
+  }, [goods]);
 
   return (
     <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>דף מנהל</Typography>
-      <Typography gutterBottom>כאן תוכלו לראות את כל המידע על המוצרים וההזמנות 📝</Typography>
+      <Typography variant="h4" gutterBottom>
+        דף מנהל
+      </Typography>
+      <Typography gutterBottom>
+        כאן תוכלו לראות את כל המידע על המוצרים וההזמנות 📝
+      </Typography>
 
-      {/* הצגת המוצרים */}
-      <Grid container spacing={4}>
-        {goods.map((item, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
-              <CardMedia
-                component="img"
-                height="200"
-                image={item.imageUrl}
-                alt={item.productName}
-              />
-              <CardContent>
-                <Typography variant="h6">{item.productName}</Typography>
-                <Typography>מחיר: ₪{item.pricePerUnit}</Typography>
-                <Typography>כמות מינימלית: {item.minQuantity}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {/* כפתורים לעבור בין התצוגות */}
+      <Button
+        variant="contained"
+        onClick={() => setView("goods")}
+        sx={{ marginRight: 2 }}
+      >
+        ניהול סחורות
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => setView("orders")}
+        sx={{ marginRight: 2 }}
+      >
+        ניהול הזמנות
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => setView("pendingOrders")}
+        sx={{ marginRight: 2 }}
+      >
+        הזמנות בתהליך
+      </Button>
+      <Button
+        variant="contained"
+        onClick={() => setView("completedOrders")}
+        sx={{ marginRight: 2 }}
+      >
+        הזמנות שהושלמו
+      </Button>
 
-      {/* הצגת ההזמנות */}
-      <Typography variant="h5" sx={{ mt: 4 }}>הזמנות</Typography>
-      <Grid container spacing={4}>
-        {orders.map((order, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6">הזמנה מספר {order.id}</Typography>
-                <Typography>סטטוס: {order.status}</Typography>
-                <Typography>תאריך הזמנה: {order.orderDate}</Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-        ))}
-      </Grid>
+      {/* הצגת התוכן לפי בחירת המשתמש */}
+      {view === "goods" && (
+        <ManagerGoodsList goods={goods} fetchGoods={fetchGoods} />
+      )}
+      {view === "orders" && (
+        <ManagerOrdersList orders={orders} fetchOrders={fetchOrders} />
+      )}
+      {view === "pendingOrders" && (
+        <ManagerPendingOrders orders={orders} fetchOrders={fetchOrders} />
+      )}
+      {view === "completedOrders" && (
+        <ManagerCompletedOrders orders={orders} fetchOrders={fetchOrders} />
+      )}
     </Container>
   );
 };

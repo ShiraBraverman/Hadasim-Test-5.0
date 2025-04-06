@@ -63,13 +63,13 @@ function buildFamilyTree() {
       familyTree.push({
         Person_Id,
         Relative_Id: Spouse_Id,
-        Connection_Type: RELATIONSHIP_TYPES.SPOUSE, 
+        Connection_Type: RELATIONSHIP_TYPES.SPOUSE,
       });
     }
     const siblings = familyData.filter(
       (sibling) =>
-        sibling.Person_Id !== Person_Id && 
-        (sibling.Father_Id === Father_Id || sibling.Mother_Id === Mother_Id) 
+        sibling.Person_Id !== Person_Id &&
+        (sibling.Father_Id === Father_Id || sibling.Mother_Id === Mother_Id)
     );
     siblings.forEach((sibling) => {
       familyTree.push({
@@ -121,11 +121,12 @@ const main = async () => {
     const familyTree = buildFamilyTree();
     completeSpouses();
     saveToCSV(familyTree);
-    console.log("The family tree has been built and saved to family_tree_result.csv");
+    console.log(
+      "The family tree has been built and saved to family_tree_result.csv"
+    );
   } catch (err) {
-    console.error("Error processing the CSV file", err);
+    alert("Error processing the CSV file", err);
   }
 };
 
 main();
-
