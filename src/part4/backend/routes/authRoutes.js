@@ -19,7 +19,6 @@ router.use((req, res, next) => {
   next();
 });
 
-// רישום משתמש חדש
 router.post("/register", (req, res) => {
   const db = readDB();
   const { userType, email, password } = req.body;
@@ -82,7 +81,6 @@ router.post("/register", (req, res) => {
   return res.status(400).json({ message: "סוג משתמש לא נתמך לרישום" });
 });
 
-// התחברות למערכת
 router.post("/:userType/login", (req, res) => {
   console.log("🔐 התחברות:", req.params.userType, req.body);
   const db = readDB();

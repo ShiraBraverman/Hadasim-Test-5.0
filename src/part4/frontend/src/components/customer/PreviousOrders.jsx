@@ -30,7 +30,6 @@ const PreviousOrders = () => {
       })
       .catch(() => alert("שגיאה בטעינת הזמנות קודמות"));
 
-    // קריאה לנתוני המוצרים
     axios
       .get("http://localhost:3001/api/goods")
       .then((res) => {
@@ -43,7 +42,6 @@ const PreviousOrders = () => {
       });
   }, [user?.id]);
 
-  // פונקציה שמחזירה את פרטי המוצר על פי ה-ID שלו
   const getGoodDetails = (id) => goodsData.find((g) => g.id === id);
 
   return (

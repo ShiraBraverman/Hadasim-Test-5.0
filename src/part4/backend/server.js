@@ -7,7 +7,6 @@ const server = jsonServer.create();
 const router = jsonServer.router("src/part4/backend/db/db.json");
 
 // Custom routes
-const suppliersRoutes = require("./routes/supplierRoutes");
 const ordersRoutes = require("./routes/orderRoutes");
 const authRoutes = require("./routes/authRoutes");
 const customerOrdersRoutes = require("./routes/customerOrderRoutes");
@@ -26,7 +25,6 @@ server.use((req, res, next) => {
 
 // Custom logic routes
 server.use("/api/auth", authRoutes); // POST /auth/login + register
-server.use("/api/suppliers", suppliersRoutes); // POST /suppliers/login + register
 server.use("/api/orders", ordersRoutes); // PUT /orders/:id/complete
 server.use("/api/customerOrders", customerOrdersRoutes); //POST /customerOrders
 server.use("/api", imageUploadRoutes);

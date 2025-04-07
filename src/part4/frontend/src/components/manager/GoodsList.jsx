@@ -17,7 +17,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 
-const ManagerGoodsList = ({ goods, fetchGoods }) => {
+const GoodsList = ({ goods, fetchGoods }) => {
   const [editedPrice, setEditedPrice] = useState("");
   const [editedMinQty, setEditedMinQty] = useState("");
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -221,10 +221,9 @@ const ManagerGoodsList = ({ goods, fetchGoods }) => {
             sx={{ mt: 2 }}
           />
 
-          {/* שדה קובץ לתמונה */}
           <input
             type="file"
-            onChange={(e) => setNewItemImage(e.target.files[0])} // שומר את התמונה שנבחרה
+            onChange={(e) => setNewItemImage(e.target.files[0])} 
             style={{ marginTop: 16 }}
           />
         </DialogContent>
@@ -292,4 +291,4 @@ const ManagerGoodsList = ({ goods, fetchGoods }) => {
   );
 };
 
-export default ManagerGoodsList;
+export default GoodsList;

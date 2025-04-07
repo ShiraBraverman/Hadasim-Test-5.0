@@ -13,17 +13,27 @@ function writeDB(data) {
   fs.writeFileSync(dbPath, JSON.stringify(data, null, 2), "utf-8");
 }
 
-// אישור הזמנה
 router.put("/:id/complete", (req, res) => {
   const orderId = parseInt(req.params.id);
   const db = readDB();
 
-  const order = db.orders.find((o) => o.id === orderId);
+  const order = db.suppliersOrders.find((o) => o.id === orderId);
 
   if (order) {
     order.status = "הושלמה";
+    order.completedDate = new Date().toISOString().split("T")[0];
+
+    const items = db.suppliersOrdersItems.filter((item) => item.orderId === orderId);
+
+    items.forEach((item) => {
+      const good = db.goods.find((g) => g.id === item.goodId);
+      if (good) {
+        good.currentQuantity += item.quantity; 
+      }
+    });
+
     writeDB(db);
-    res.json({ message: "ההזמנה הושלמה" });
+    res.json({ message: "ההזמנה הושלמה והמלאי עודכן" });
   } else {
     res.status(404).json({ message: "ההזמנה לא נמצאה" });
   }

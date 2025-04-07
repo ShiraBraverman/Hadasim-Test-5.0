@@ -86,6 +86,216 @@
       ],
       "orderDate": "2025-04-06",
       "status": "בוצעה"
+    },
+    {
+      "id": 6,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 2,
+          "quantity": 2
+        },
+        {
+          "goodId": 3,
+          "quantity": 3
+        }
+      ],
+      "orderDate": "2025-04-06",
+      "status": "בוצעה"
+    },
+    {
+      "id": 7,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 1,
+          "quantity": 4
+        },
+        {
+          "goodId": 2,
+          "quantity": 21
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 8,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 2,
+          "quantity": 6
+        },
+        {
+          "goodId": 1,
+          "quantity": 2
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 9,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 2,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 10,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 1,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 11,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 2,
+          "quantity": 1
+        },
+        {
+          "goodId": 1,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 12,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 1,
+          "quantity": 1
+        },
+        {
+          "goodId": 2,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 13,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 2,
+          "quantity": 1
+        },
+        {
+          "goodId": 1,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 14,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 3,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    },
+    {
+      "id": 15,
+      "customerId": 2,
+      "goods": [
+        {
+          "goodId": 4,
+          "quantity": 1
+        }
+      ],
+      "orderDate": "2025-04-07",
+      "status": "בוצעה"
+    }
+  ],
+  "goods": [
+    {
+      "id": 1,
+      "productName": "חלב",
+      "pricePerUnit": 5,
+      "minQuantity": 10,
+      "currentQuantity": 2,
+      "imageUrl": "/uploads/1712345678910.webp"
+    },
+    {
+      "id": 2,
+      "productName": "לחם",
+      "pricePerUnit": 5,
+      "minQuantity": 20,
+      "currentQuantity": 2,
+      "imageUrl": "/uploads/1712345678911.webp"
+    },
+    {
+      "id": 3,
+      "productName": "בצל",
+      "pricePerUnit": 20,
+      "minQuantity": 5,
+      "currentQuantity": 72,
+      "imageUrl": "/uploads/1743966491723.jpg"
+    },
+    {
+      "id": 4,
+      "productName": "עגבניה",
+      "pricePerUnit": 23,
+      "minQuantity": 56,
+      "currentQuantity": 55,
+      "imageUrl": "/uploads/1743966514514.jpg"
+    },
+    {
+      "id": 5,
+      "productName": "מלפפון",
+      "pricePerUnit": 5,
+      "minQuantity": 20,
+      "currentQuantity": 23,
+      "imageUrl": "/uploads/1743966535524.jpg"
+    },
+    {
+      "id": 6,
+      "productName": "פרורי לחם",
+      "pricePerUnit": 32,
+      "minQuantity": 41,
+      "currentQuantity": 100,
+      "imageUrl": "/uploads/1743966560254.jpg"
+    },
+    {
+      "id": 7,
+      "productName": "גבינה",
+      "pricePerUnit": 40,
+      "minQuantity": 20,
+      "currentQuantity": 56,
+      "imageUrl": "/uploads/1743966587624.jpg"
+    },
+    {
+      "id": 8,
+      "productName": "גבינצ",
+      "pricePerUnit": 36,
+      "minQuantity": 100,
+      "currentQuantity": 150,
+      "imageUrl": "/uploads/1743974680987.jpg"
     }
   ],
   "suppliers": [
@@ -95,106 +305,230 @@
       "phoneNumber": "123456789",
       "representativeName": "יוסי כהן",
       "email": "yossi@supplier.com",
-      "password": "1234",
-      "goodsList": [
-        {
-          "productName": "חלב",
-          "pricePerUnit": 5
-        },
-        {
-          "productName": "לחם",
-          "pricePerUnit": 2
-        }
-      ]
-    }
-  ],
-  "goods": [
-    {
-      "id": 1,
-      "productName": "חלב",
-      "pricePerUnit": 5,
-      "minQuantity": 10,
-      "currentQuantity": 12,
-      "imageUrl": "/uploads/1712345678910.webp"
+      "password": "1234"
     },
     {
-      "productName": "לחם",
-      "pricePerUnit": "5",
-      "minQuantity": 20,
       "id": 2,
-      "currentQuantity": 23,
-      "imageUrl": "/uploads/1712345678911.webp"
+      "companyName": "ספק ב",
+      "phoneNumber": "987654321",
+      "representativeName": "ישראל ישראלי",
+      "email": "israel@supplier.com",
+      "password": "1234"
     },
     {
-      "productName": "בצל",
-      "pricePerUnit": "20",
-      "minQuantity": "5",
-      "currentQuantity": 76,
-      "imageUrl": "/uploads/1743966491723.jpg",
-      "id": 3
-    },
-    {
-      "productName": "עגבניה",
-      "pricePerUnit": "23",
-      "minQuantity": "56",
-      "currentQuantity": 53,
-      "imageUrl": "/uploads/1743966514514.jpg",
-      "id": 4
-    },
-    {
-      "productName": "מלפפון",
-      "pricePerUnit": "5",
-      "minQuantity": "20",
-      "currentQuantity": "23",
-      "imageUrl": "/uploads/1743966535524.jpg",
-      "id": 5
-    },
-    {
-      "productName": "פרורי לחם",
-      "pricePerUnit": "32",
-      "minQuantity": "41",
-      "currentQuantity": "100",
-      "imageUrl": "/uploads/1743966560254.jpg",
-      "id": 6
-    },
-    {
-      "productName": "גבינה",
-      "pricePerUnit": "40",
-      "minQuantity": "20",
-      "currentQuantity": "56",
-      "imageUrl": "/uploads/1743966587624.jpg",
-      "id": 7
-    },
-    {
-      "productName": "גבינה צהובה",
-      "pricePerUnit": "30",
-      "minQuantity": "10",
-      "currentQuantity": "56",
-      "imageUrl": "/uploads/1743966605774.jpg",
-      "id": 8
+      "id": 3,
+      "companyName": "ספק ג",
+      "phoneNumber": "1122334455",
+      "representativeName": "אבי לוי",
+      "email": "avi@supplier.com",
+      "password": "1234"
     }
   ],
-  "orders": [
+  "suppliedProducts": [
     {
       "id": 1,
       "supplierId": 1,
+      "goodId": 1,
+      "pricePerUnit": 5
+    },
+    {
+      "id": 2,
+      "supplierId": 2,
+      "goodId": 1,
+      "pricePerUnit": 6
+    },
+    {
+      "id": 3,
+      "supplierId": 3,
+      "goodId": 1,
+      "pricePerUnit": 5.5
+    },
+    {
+      "id": 4,
+      "supplierId": 1,
+      "goodId": 2,
+      "pricePerUnit": 10
+    },
+    {
+      "id": 5,
+      "supplierId": 2,
+      "goodId": 2,
+      "pricePerUnit": 9
+    },
+    {
+      "id": 6,
+      "supplierId": 3,
+      "goodId": 2,
+      "pricePerUnit": 11
+    },
+    {
+      "id": 7,
+      "supplierId": 1,
+      "goodId": 7,
+      "pricePerUnit": 10
+    },
+    {
+      "id": 8,
+      "supplierId": 2,
+      "goodId": 7,
+      "pricePerUnit": 9.5
+    },
+    {
+      "id": 9,
+      "supplierId": 3,
+      "goodId": 7,
+      "pricePerUnit": 10.5
+    },
+    {
+      "id": 10,
+      "supplierId": 1,
+      "goodId": 8,
+      "pricePerUnit": 10
+    },
+    {
+      "id": 11,
+      "supplierId": 2,
+      "goodId": 8,
+      "pricePerUnit": 9.5
+    },
+    {
+      "id": 12,
+      "supplierId": 3,
+      "goodId": 8,
+      "pricePerUnit": 11
+    },
+    {
+      "id": 13,
+      "supplierId": 1,
+      "goodId": 3,
+      "pricePerUnit": 20
+    },
+    {
+      "id": 14,
+      "supplierId": 2,
+      "goodId": 3,
+      "pricePerUnit": 21
+    },
+    {
+      "id": 15,
+      "supplierId": 3,
+      "goodId": 3,
+      "pricePerUnit": 19
+    }
+  ],
+  "suppliersOrders": [
+    {
+      "id": 1,
+      "supplierId": 1,
+      "status": "אושרה",
+      "orderDate": "2025-04-04"
+    },
+    {
+      "id": 2,
+      "supplierId": 1,
       "status": "הושלמה",
-      "goods": [
-        {
-          "productName": "חלב",
-          "quantity": 5
-        },
-        {
-          "productName": "לחם",
-          "quantity": 10
-        }
-      ],
-      "orderDate": "2025-04-04",
-      "completedDate": "2025-04-05"
+      "orderDate": "2025-04-05"
+    },
+    {
+      "id": 3,
+      "supplierId": 1,
+      "status": "הושלמה",
+      "orderDate": "2025-04-02",
+      "completedDate": "2025-04-06"
+    },
+    {
+      "id": 4,
+      "supplierId": 1,
+      "status": "ממתין לאישור",
+      "orderDate": "2025-04-07",
+      "completedDate": null
+    },
+    {
+      "id": 5,
+      "supplierId": 2,
+      "status": "ממתין לאישור",
+      "orderDate": "2025-04-07",
+      "completedDate": null
+    },
+    {
+      "id": 6,
+      "supplierId": 2,
+      "status": "ממתין לאישור",
+      "orderDate": "2025-04-07",
+      "completedDate": null
+    },
+    {
+      "id": 7,
+      "supplierId": 1,
+      "status": "ממתין לאישור",
+      "orderDate": "2025-04-07",
+      "completedDate": null
+    }
+  ],
+  "suppliersOrdersItems": [
+    {
+      "id": 1,
+      "orderId": 1,
+      "goodId": 1,
+      "quantity": 5
+    },
+    {
+      "id": 2,
+      "orderId": 1,
+      "goodId": 2,
+      "quantity": 10
+    },
+    {
+      "id": 2,
+      "orderId": 1,
+      "goodId": 7,
+      "quantity": 10
+    },
+    {
+      "id": 3,
+      "orderId": 2,
+      "goodId": 8,
+      "quantity": 7
+    },
+    {
+      "id": 4,
+      "orderId": 3,
+      "goodId": 1,
+      "quantity": 3
+    },
+    {
+      "id": 6,
+      "orderId": 4,
+      "goodId": 1,
+      "quantity": 10
+    },
+    {
+      "id": 7,
+      "orderId": 5,
+      "goodId": 2,
+      "quantity": 20
+    },
+    {
+      "id": 8,
+      "orderId": 6,
+      "goodId": 2,
+      "quantity": 20
+    },
+    {
+      "id": 9,
+      "orderId": 7,
+      "goodId": 1,
+      "quantity": 10
+    }
+  ],
+  "missingSuppliersOrders": [
+    {
+      "id": 1,
+      "goodId": 4,
+      "createdDate": "2025-04-07"
     }
   ],
   "admin": {
-    "id": 1,
     "name": "admin",
     "email": "admin@shop.com",
     "password": "1234"

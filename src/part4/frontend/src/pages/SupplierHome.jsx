@@ -1,42 +1,41 @@
-import React, { useState } from "react";
-import { Container, Typography, Button, Box } from "@mui/material";
-import SupplierGoods from "../components/supplier/SupplierGoods";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import SupplierDashboard from "../components/supplier/SupplierDashboard";
+import SupplierProducts from "../components/supplier/SupplierProducts";
 import SupplierOrders from "../components/supplier/SupplierOrders";
+import { useUser } from "../contest/UserContext";
+import LoadingScreen from "../components/common/LoadingScreen";
 
 const SupplierHome = () => {
-  const [view, setView] = useState(null);
-  const supplierId = localStorage.getItem("supplierId");
+  const { user } = useUser();
+  const [page, setPage] = useState("dashboard");
+  const [supplier, setSupplier] = useState(null);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    axios
+      .get(`http://localhost:3001/api/suppliers/${user.id}`)
+      .then((res) => setSupplier(res.data))
+      .catch(() => alert("שגיאה בטעינת נתוני הספק"));
+  }, [user?.id]);
+
+  if (!supplier) return <LoadingScreen message="טוען נתוני ספק..." />;
 
   return (
-    <Container sx={{ mt: 4 }}>
-      <Typography variant="h4" gutterBottom>
-        דף ספק
-      </Typography>
-      <Typography gutterBottom>
-        כאן תוכלו לעדכן את המוצרים שלכם ולהתעדכן בהזמנות 🛒
-      </Typography>
+    <div style={{ padding: "1rem" }}>
+      <h1>שלום, {supplier.companyName}!</h1>
 
-      <Box sx={{ display: "flex", gap: 2, mt: 2, mb: 4 }}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setView("goods")}
-        >
-          ניהול מוצרים
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => setView("orders")}
-        >
-          צפייה בהזמנות
-        </Button>
-      </Box>
+      <div style={{ marginBottom: "1rem" }}>
+        <button onClick={() => setPage("dashboard")}>🏠 ראשי</button>
+        <button onClick={() => setPage("products")}>📦 מוצרים</button>
+        <button onClick={() => setPage("orders")}>🧾 הזמנות</button>
+      </div>
 
-      {/* הצגת הרכיב הרלוונטי לפי הבחירה */}
-      {view === "goods" && <SupplierGoods supplierId={supplierId} />}
-      {view === "orders" && <SupplierOrders />}
-    </Container>
+      {page === "dashboard" && <SupplierDashboard supplier={supplier} />}
+      {page === "products" && <SupplierProducts supplier={supplier} />}
+      {page === "orders" && <SupplierOrders supplier={supplier} />}
+    </div>
   );
 };
 

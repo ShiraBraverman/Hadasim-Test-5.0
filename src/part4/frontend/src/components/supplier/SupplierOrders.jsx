@@ -1,112 +1,116 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import {
+  Typography,
+  Box,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Button,
+} from "@mui/material";
 
-const SupplierOrders = () => {
+export default function SupplierOrders({ supplier }) {
   const [orders, setOrders] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const supplierId = localStorage.getItem("supplierId");
+  const [orderItems, setOrderItems] = useState([]);
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        // const response = await axios.get(`/api/orders?supplierId=${supplierId}`);
-        const response = await axios.get(`/api/orders?supplierId=1`);
-        console.log(response.data);
-        setOrders(response.data);
-      } catch (error) {
-        alert("שגיאה בשליפת הזמנות:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    axios
+      .get(`http://localhost:3001/api/suppliersOrders?supplierId=${supplier.id}`)
+      .then((res) => setOrders(res.data))
+      .catch(() => alert("שגיאה בטעינת ההזמנות"));
 
-    fetchOrders();
-  }, [supplierId]);
+    axios
+      .get("http://localhost:3001/api/suppliersOrdersItems")
+      .then((res) => setOrderItems(res.data))
+      .catch(() => alert("שגיאה בטעינת פריטי ההזמנות"));
 
-  const approveOrder = async (orderId) => {
+    axios
+      .get("http://localhost:3001/api/goods")
+      .then((res) => setProducts(res.data))
+      .catch(() => alert("שגיאה בטעינת המוצרים"));
+  }, [supplier.id]);
+
+  const getProductDetails = (id) => products.find((p) => p.id === id);
+
+  const getItemsForOrder = (orderId) =>
+    orderItems.filter((item) => item.orderId === orderId);
+
+  const handleApprove = async (orderId) => {
     try {
-      await axios.put(`/api/orders/${orderId}/approve`, { status: "בתהליך" });
-      // עדכון מקומי של ההזמנה המאושרת
+      await axios.patch(`http://localhost:3001/api/suppliersOrders/${orderId}`, {
+        status: "אושרה",
+      });
       setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, status: "בתהליך" } : order
-        )
+        prev.map((o) => (o.id === orderId ? { ...o, status: "אושרה" } : o))
       );
-    } catch (error) {
-      alert("שגיאה באישור הזמנה:", error);
+    } catch {
+      alert("שגיאה באישור ההזמנה");
     }
   };
 
-  if (loading) return <p className="text-center mt-8">טוען הזמנות...</p>;
+  const sortedOrders = [...orders].sort((a, b) => {
+    const priority = { "ממתין לאישור": 0, "אושרה": 1, "הושלמה": 2 };
+    return priority[a.status] - priority[b.status];
+  });
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold text-center mb-6">ההזמנות שלך</h2>
-      {orders.length === 0 ? (
-        <p className="text-center text-gray-500">אין הזמנות להצגה</p>
+    <Box sx={{ mt: 4 }}>
+      <Typography variant="h5">ההזמנות שלך 🧾</Typography>
+      {sortedOrders.length === 0 ? (
+        <Typography>אין עדיין הזמנות</Typography>
       ) : (
-        <table className="w-full border border-gray-300 rounded shadow-sm">
-          <thead className="bg-gray-100">
-            <tr className="text-right">
-              <th className="p-2">מספר הזמנה</th>
-              <th className="p-2">תאריך</th>
-              <th className="p-2">מוצרים</th>
-              <th className="p-2">סטטוס</th>
-              <th className="p-2">פעולה</th>
-            </tr>
-          </thead>
-          <tbody>
-            {orders.map((order, idx) => (
-              <tr
-                key={order._id}
-                className="text-right border-t border-gray-200"
-              >
-                <td className="p-2">{idx + 1}</td>
-                <td className="p-2">
-                  {new Date(order.date).toLocaleDateString()}
-                </td>
-                <td className="p-2">
-                  <ul className="list-disc pr-4">
-                    {order.goods.map((item, i) => (
-                      <li key={i}>
-                        {item.name} × {item.quantity}
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-                <td className="p-2">
-                  <span
-                    className={`px-2 py-1 rounded text-white ${
-                      order.status === "חדשה"
-                        ? "bg-blue-500"
-                        : order.status === "בתהליך"
-                        ? "bg-yellow-500"
-                        : "bg-green-600"
-                    }`}
+        sortedOrders.map((order) => {
+          const items = getItemsForOrder(order.id);
+          return (
+            <Paper key={order.id} sx={{ p: 2, mb: 4 }} elevation={3}>
+              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <Typography variant="h6">
+                  הזמנה #{order.id} -{" "}
+                  {new Date(order.orderDate).toLocaleDateString()}
+                </Typography>
+                {order.status === "ממתין לאישור" && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleApprove(order.id)}
                   >
-                    {order.status}
-                  </span>
-                </td>
-                <td className="p-2">
-                  {order.status === "חדשה" ? (
-                    <button
-                      onClick={() => approveOrder(order._id)}
-                      className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded"
-                    >
-                      אשר הזמנה
-                    </button>
-                  ) : (
-                    <span className="text-gray-400">אין פעולה</span>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  );
-};
+                    אשר הזמנה
+                  </Button>
+                )}
+              </Box>
 
-export default SupplierOrders;
+              <Typography>סטטוס: {order.status}</Typography>
+              <TableContainer sx={{ mt: 2 }}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>שם מוצר</TableCell>
+                      <TableCell align="center">כמות</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {items.map((g, i) => {
+                      const product = getProductDetails(g.goodId);
+                      if (!product) return null;
+                      return (
+                        <TableRow key={i}>
+                          <TableCell>{product.productName}</TableCell>
+                          <TableCell align="center">{g.quantity}</TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          );
+        })
+      )}
+    </Box>
+  );
+}

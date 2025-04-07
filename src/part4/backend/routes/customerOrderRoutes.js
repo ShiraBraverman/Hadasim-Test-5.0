@@ -27,7 +27,6 @@ router.post("/", (req, res) => {
     return res.status(404).json({ error: "לקוח לא נמצא" });
   }
 
-  // בדיקת תקינות מוצרים
   for (let item of goods) {
     const inventoryItem = db.goods.find((g) => g.id === item.goodId);
     if (!inventoryItem) {
@@ -53,7 +52,6 @@ router.post("/", (req, res) => {
 
   db.customerOrders.push(newOrder);
 
-  // עדכון מלאי
   goods.forEach((item) => {
     const inventoryItem = db.goods.find((g) => g.id === item.goodId);
     if (inventoryItem) {
@@ -61,45 +59,56 @@ router.post("/", (req, res) => {
     }
   });
 
-  // בדיקת צורך בהזמנה אוטומטית
   goods.forEach((item) => {
+    console.log("item");
+    console.log(item);
     const inventoryItem = db.goods.find((g) => g.id === item.goodId);
     if (
       inventoryItem &&
-      inventoryItem.currentQuantity < inventoryItem.minStoreQuantity
+      inventoryItem.currentQuantity <= inventoryItem.minQuantity
     ) {
       let cheapestSupplier = null;
       let cheapestPrice = Infinity;
 
-      db.suppliers.forEach((supplier) => {
-        const found = supplier.goodsList.find((g) => g.goodId === item.goodId);
-        if (found && found.pricePerUnit < cheapestPrice) {
-          cheapestSupplier = supplier;
-          cheapestPrice = found.pricePerUnit;
+      db.suppliedProducts.forEach((supplierProduct) => {
+        if (supplierProduct.goodId === item.goodId) {
+          const supplier = db.suppliers.find(
+            (s) => s.id === supplierProduct.supplierId
+          );
+          if (supplierProduct.pricePerUnit < cheapestPrice) {
+            cheapestSupplier = supplier;
+            cheapestPrice = supplierProduct.pricePerUnit;
+          }
         }
       });
 
       if (cheapestSupplier) {
+        const newOrderId = db.suppliersOrders.length + 1;
+
         const autoOrder = {
-          id: db.orders.length + 1,
+          id: newOrderId,
           supplierId: cheapestSupplier.id,
           status: "ממתין לאישור",
-          goods: [
-            {
-              goodId: item.goodId,
-              productName: inventoryItem.productName,
-              quantity: cheapestSupplier.goodsList.find(
-                (g) => g.goodId === item.goodId
-              ).minQuantity,
-            },
-          ],
           orderDate: new Date().toISOString().split("T")[0],
           completedDate: null,
         };
 
-        db.orders.push(autoOrder);
+        db.suppliersOrders.push(autoOrder);
+
+        db.suppliersOrdersItems.push({
+          id: db.suppliersOrdersItems.length + 1,
+          orderId: newOrderId,
+          goodId: item.goodId,
+          quantity: inventoryItem.minQuantity,
+        });
+
         console.log(`🔁 בוצעה הזמנה אוטומטית ל: ${inventoryItem.productName}`);
       } else {
+        db.missingSuppliersOrders.push({
+          id: db.missingSuppliersOrders.length + 1,
+          goodId: item.goodId,
+          createdDate: new Date().toISOString().split("T")[0],
+        });
         console.warn(`❗ אין ספק שמספק את המוצר: ${inventoryItem.productName}`);
       }
     }

@@ -8,9 +8,11 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Box,
 } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contest/UserContext";
+import StoreIcon from "@mui/icons-material/Store";
 import axios from "axios";
 
 const translateUserType = (type) => {
@@ -51,7 +53,7 @@ const Navbar = () => {
           alert("שגיאה בשליפת שם המשתמש:", err);
         });
     }
-  }, [,user]);
+  }, [, user]);
 
   const handleLogout = () => {
     localStorage.removeItem("loggedUser");
@@ -70,55 +72,68 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#1976d2" }}>
-      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6">🛒 מערכת מכולת</Typography>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          {userName && (
-            <Typography
-              variant="body1"
-              sx={{ marginRight: 2, fontWeight: "bold" }}
-            >
-              שלום, {translateUserType(user.userType)} - {userName}
-            </Typography>
-          )}
-          <Button color="inherit" component={Link} to="/">
-            בית
-          </Button>
-          <Button color="inherit" component={Link} to="/customer">
-            לקוח
-          </Button>
-          <Button color="inherit" component={Link} to="/supplier">
-            ספק
-          </Button>
-          <Button color="inherit" component={Link} to="/manager">
-            מנהל
-          </Button>
-          {user ? (
-            <Button color="inherit" onClick={handleOpenDialog}>
-              התנתק
-            </Button>
-          ) : null}
-        </div>
-      </Toolbar>
+    <>
+      <AppBar position="fixed" sx={{ backgroundColor: "#1976d2" }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography
+            variant="h6"
+            sx={{ display: "flex", alignItems: "center", fontWeight: 600 }}
+          >
+            <StoreIcon sx={{ mr: 1 }} /> מערכת מכולת
+          </Typography>
 
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>האם אתה בטוח שברצונך להתנתק?</DialogTitle>
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            {user && (userName || user.userType) && (
+              <Typography variant="body1" sx={{ mr: 3, fontWeight: 600 }}>
+                שלום, {translateUserType(user.userType)}
+                {userName && ` - ${userName}`}
+              </Typography>
+            )}
+
+            <Button
+              color="inherit"
+              onClick={() => navigate("/")}
+              sx={{ mr: 1 }}
+            >
+              בית
+            </Button>
+
+            {user && (
+              <Button
+                color="inherit"
+                variant="outlined"
+                onClick={() => setOpenDialog(true)}
+                sx={{
+                  backgroundColor: "rgba(255,255,255,0.15)",
+                  "&:hover": { backgroundColor: "rgba(255,255,255,0.25)" },
+                }}
+              >
+                התנתק
+              </Button>
+            )}
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+        <DialogTitle sx={{ textAlign: "right" }}>
+          האם אתה בטוח שברצונך להתנתק?
+        </DialogTitle>
         <DialogContent>
-          <Typography variant="body2">
+          <Typography variant="body1" sx={{ textAlign: "right" }}>
             לא תוכל להחזיר את הפעולה לאחר ההתנתקות.
           </Typography>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+        <DialogActions sx={{ justifyContent: "flex-start" }}>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
             ביטול
           </Button>
-          <Button onClick={handleLogout} color="secondary">
+          <Button onClick={handleLogout} color="error" autoFocus>
             התנתק
           </Button>
         </DialogActions>
       </Dialog>
-    </AppBar>
+    </>
   );
 };
 

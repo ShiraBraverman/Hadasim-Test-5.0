@@ -16,14 +16,14 @@ const Login = () => {
   const { setUser } = useUser();
   const navigate = useNavigate();
   // const [formData, setFormData] = useState({ email: "", password: "" });
-  const [formData, setFormData] = useState({
-    email: "yossi@supplier.com",
-    password: "1234",
-  });
   // const [formData, setFormData] = useState({
-  //   email: "admin@shop.com",
+  //   email: "yossi@supplier.com",
   //   password: "1234",
   // });
+  const [formData, setFormData] = useState({
+    email: "admin@shop.com",
+    password: "1234",
+  });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
