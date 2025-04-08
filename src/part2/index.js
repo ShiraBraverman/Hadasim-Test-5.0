@@ -1,10 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const csv = require("csv-parser");
-const _ = require("lodash");
-const moment = require("moment");
 
-const filePathCSV = path.join(__dirname, "data.csv");
+const filePathCSV = path.join(__dirname, "family_data.csv");
 
 const RELATIONSHIP_TYPES = {
   FATHER: "אב",
@@ -17,32 +15,45 @@ const RELATIONSHIP_TYPES = {
   DAUGHTER: "בת",
 };
 
-// קריאה וניתוח של קובץ ה-CSV
-function processCSV(filePath) {
-  return new Promise((resolve, reject) => {
-    const rows = [];
+// O(R) – R = number of rows in the CSV file
+function saveCorrectedData(data) {
+  const headers = "Person_Id,First_Name,Last_Name,Gender,Father_Id,Mother_Id,Spouse_Id";
+  const output = data
+    .map(
+      (entry) =>
+        `${entry.Person_Id},${entry.First_Name},${entry.Last_Name},${entry.Gender},${entry.Father_Id},${entry.Mother_Id},${entry.Spouse_Id}`
+    )
+    .join("\n");
 
-    fs.createReadStream(filePath)
-      .pipe(csv())
-      .on("data", (row) => {
-        rows.push(row);
-      })
-      .on("end", () => {
-        familyData = rows;
-        resolve();
-      })
-      .on("error", (err) => reject(err));
-  });
+  fs.writeFileSync("corrected_data.csv", `${headers}\n${output}`);
 }
 
-// טבלה לעיבוד הנתונים
-let familyData = [];
+// O(R) – Fix missing spouse links (bidirectional correction)
+function correctData(data) {
+  const personById = {}; // O(R) to build the lookup map
 
-// קריאה וניתוח של קובץ ה-CSV
-function buildFamilyTree() {
+  data.forEach((person) => {
+    personById[person.Person_Id] = person; // O(1) insert → total O(R)
+  });
+
+  data.forEach((person) => {
+    const spouseId = person.Spouse_Id;
+    if (spouseId && personById[spouseId]) {
+      const spouse = personById[spouseId];
+      if (!spouse.Spouse_Id) {
+        spouse.Spouse_Id = person.Person_Id; // O(1)
+      }
+    }
+  });
+
+  return data;
+}
+
+// O(R^2) – Build family tree, includes sibling detection (nested loop)
+function buildFamilyTree(data) {
   const familyTree = [];
 
-  familyData.forEach((person) => {
+  data.forEach((person) => {
     const { Person_Id, Father_Id, Mother_Id, Spouse_Id } = person;
 
     if (Father_Id) {
@@ -66,19 +77,41 @@ function buildFamilyTree() {
         Connection_Type: RELATIONSHIP_TYPES.SPOUSE,
       });
     }
-    const siblings = familyData.filter(
+
+    // Sibling detection: for each person, scan all others → O(R^2)
+    const siblings = data.filter(
       (sibling) =>
         sibling.Person_Id !== Person_Id &&
-        (sibling.Father_Id === Father_Id || sibling.Mother_Id === Mother_Id)
+        (sibling.Father_Id === Father_Id && Father_Id ||
+         sibling.Mother_Id === Mother_Id && Mother_Id)
     );
+
     siblings.forEach((sibling) => {
       familyTree.push({
         Person_Id,
         Relative_Id: sibling.Person_Id,
         Connection_Type:
-          sibling.Gender === "זכר"
+          sibling.Gender === "Male"
             ? RELATIONSHIP_TYPES.BROTHER
             : RELATIONSHIP_TYPES.SISTER,
+      });
+    });
+  });
+
+  data.forEach((person) => {
+    const children = data.filter(
+      (child) =>
+        child.Father_Id === person.Person_Id || child.Mother_Id === person.Person_Id
+    );
+
+    children.forEach((child) => {
+      familyTree.push({
+        Person_Id: person.Person_Id,
+        Relative_Id: child.Person_Id,
+        Connection_Type:
+          child.Gender === "Male"
+            ? RELATIONSHIP_TYPES.SON
+            : RELATIONSHIP_TYPES.DAUGHTER,
       });
     });
   });
@@ -86,24 +119,8 @@ function buildFamilyTree() {
   return familyTree;
 }
 
-// תרגיל 2 - השלמת בני זוג
-function completeSpouses() {
-  familyData.forEach((person) => {
-    const { Person_Id, Spouse_Id } = person;
-
-    if (Spouse_Id) {
-      const spouse = familyData.find((p) => p.Person_Id === Spouse_Id);
-      if (spouse) {
-        if (!spouse.Spouse_Id) {
-          spouse.Spouse_Id = Person_Id;
-        }
-      }
-    }
-  });
-}
-
-// שמירת התוצאות לקובץ CSV
-function saveToCSV(data) {
+// O(F) – F = number of family relations generated
+function saveFamilyTreeToCSV(data) {
   const headers = "Person_Id,Relative_Id,Connection_Type";
   const output = data
     .map(
@@ -112,21 +129,27 @@ function saveToCSV(data) {
     )
     .join("\n");
 
-  fs.writeFileSync("family_tree_result.csv", `${headers}\n${output}`);
+  fs.writeFileSync("family_tree.csv", `${headers}\n${output}`);
 }
 
-const main = async () => {
-  try {
-    await processCSV(filePathCSV);
-    const familyTree = buildFamilyTree();
-    completeSpouses();
-    saveToCSV(familyTree);
-    console.log(
-      "The family tree has been built and saved to family_tree_result.csv"
-    );
-  } catch (err) {
-    alert("Error processing the CSV file", err);
-  }
-};
+// O(R) – Read and parse CSV file
+function main() {
+  const data = [];
+
+  fs.createReadStream(filePathCSV)
+    .pipe(csv())
+    .on("data", (row) => {
+      data.push(row); // O(1) per row → total O(R)
+    })
+    .on("end", () => {
+      const corrected = correctData(data);             // O(R)
+      saveCorrectedData(corrected);                    // O(R)
+      console.log("✔ corrected_data.csv saved");
+      
+      const familyTree = buildFamilyTree(corrected);   // O(R^2)
+      saveFamilyTreeToCSV(familyTree);                 // O(F)
+      console.log("✔ family_tree.csv saved");
+    });
+}
 
 main();
