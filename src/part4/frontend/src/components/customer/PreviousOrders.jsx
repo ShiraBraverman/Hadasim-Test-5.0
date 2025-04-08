@@ -54,13 +54,10 @@ const PreviousOrders = () => {
         <Typography>אין עדיין הזמנות קודמות</Typography>
       ) : (
         orders.map((order) => {
-          const total = order.goods.reduce(
-            (sum, g) => {
-              const good = getGoodDetails(g.goodId);
-              return sum + (good ? g.quantity * good.pricePerUnit : 0);
-            },
-            0
-          );
+          const total = order.goods.reduce((sum, g) => {
+            const good = getGoodDetails(g.goodId);
+            return sum + (good ? g.quantity * good.pricePerUnit : 0);
+          }, 0);
 
           return (
             <Paper key={order.id} sx={{ p: 2, mb: 4 }} elevation={3}>

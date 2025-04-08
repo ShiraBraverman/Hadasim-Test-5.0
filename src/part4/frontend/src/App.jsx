@@ -9,7 +9,7 @@ import ManagerHome from "./pages/ManagerHome";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import { UserProvider } from "./contest/UserContext";
-import {  Box } from "@mui/material";
+import { Box } from "@mui/material";
 
 const App = () => {
   return (

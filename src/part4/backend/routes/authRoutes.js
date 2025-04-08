@@ -12,10 +12,10 @@ function writeDB(data) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
 }
 
-console.log("📦 authRoutes loaded");
+console.log("authRoutes loaded");
 
 router.use((req, res, next) => {
-  console.log(`📥 auth route hit: ${req.method} ${req.originalUrl}`);
+  console.log(`auth route hit: ${req.method} ${req.originalUrl}`);
   next();
 });
 
@@ -82,7 +82,7 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/:userType/login", (req, res) => {
-  console.log("🔐 התחברות:", req.params.userType, req.body);
+  console.log("התחברות:", req.params.userType, req.body);
   const db = readDB();
   const { email, password } = req.body;
   const { userType } = req.params;

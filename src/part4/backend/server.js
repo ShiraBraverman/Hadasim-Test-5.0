@@ -35,5 +35,5 @@ server.use("/api", router); // Use this after custom routes
 server.use("/uploads", express.static("src/part4/backend/uploads")); // גישה ישירה לתמונות
 
 server.listen(3001, () => {
-  console.log("🚀 Server running on http://localhost:3001");
+  console.log("Server running on http://localhost:3001");
 });

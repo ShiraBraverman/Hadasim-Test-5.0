@@ -20,7 +20,9 @@ export default function SupplierOrders({ supplier }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3001/api/suppliersOrders?supplierId=${supplier.id}`)
+      .get(
+        `http://localhost:3001/api/suppliersOrders?supplierId=${supplier.id}`
+      )
       .then((res) => setOrders(res.data))
       .catch(() => alert("שגיאה בטעינת ההזמנות"));
 
@@ -42,9 +44,12 @@ export default function SupplierOrders({ supplier }) {
 
   const handleApprove = async (orderId) => {
     try {
-      await axios.patch(`http://localhost:3001/api/suppliersOrders/${orderId}`, {
-        status: "אושרה",
-      });
+      await axios.patch(
+        `http://localhost:3001/api/suppliersOrders/${orderId}`,
+        {
+          status: "אושרה",
+        }
+      );
       setOrders((prev) =>
         prev.map((o) => (o.id === orderId ? { ...o, status: "אושרה" } : o))
       );
@@ -54,7 +59,7 @@ export default function SupplierOrders({ supplier }) {
   };
 
   const sortedOrders = [...orders].sort((a, b) => {
-    const priority = { "ממתין לאישור": 0, "אושרה": 1, "הושלמה": 2 };
+    const priority = { "ממתין לאישור": 0, אושרה: 1, הושלמה: 2 };
     return priority[a.status] - priority[b.status];
   });
 
@@ -68,7 +73,13 @@ export default function SupplierOrders({ supplier }) {
           const items = getItemsForOrder(order.id);
           return (
             <Paper key={order.id} sx={{ p: 2, mb: 4 }} elevation={3}>
-              <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
                 <Typography variant="h6">
                   הזמנה #{order.id} -{" "}
                   {new Date(order.orderDate).toLocaleDateString()}

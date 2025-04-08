@@ -102,14 +102,14 @@ router.post("/", (req, res) => {
           quantity: inventoryItem.minQuantity,
         });
 
-        console.log(`🔁 בוצעה הזמנה אוטומטית ל: ${inventoryItem.productName}`);
+        console.log(`בוצעה הזמנה אוטומטית ל: ${inventoryItem.productName}`);
       } else {
         db.missingSuppliersOrders.push({
           id: db.missingSuppliersOrders.length + 1,
           goodId: item.goodId,
           createdDate: new Date().toISOString().split("T")[0],
         });
-        console.warn(`❗ אין ספק שמספק את המוצר: ${inventoryItem.productName}`);
+        console.warn(`אין ספק שמספק את המוצר: ${inventoryItem.productName}`);
       }
     }
   });
