@@ -3,11 +3,11 @@ const readline = require("readline");
 const path = require("path");
 
 const LOG_FILE = "logs.txt";
-const OUTPUT_DIR = "log_parts"; // תיקייה לאחסון קבצים מחולקים
-const CHUNK_SIZE = 20000; // מספר שורות בכל חלק
-const N = 10; // מספר שגיאות נפוצות להצגה
+const OUTPUT_DIR = "log_parts";
+const CHUNK_SIZE = 20000;
+const N = 10;
 
-// חלוקת קובץ הלוגים לקבצים קטנים יותר
+// O(L) – L = total lines in log file
 async function splitLogFile(logFile) {
   if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR);
 
@@ -30,13 +30,12 @@ async function splitLogFile(logFile) {
     }
   }
 
-  // שמירת השורות האחרונות שלא הגיעו למגבלת CHUNK_SIZE
   if (partData.length > 0) {
     fs.writeFileSync(path.join(OUTPUT_DIR, `part_${partNumber}.txt`), partData.join("\n"));
   }
 }
 
-// סופרת מופעים של כל קוד שגיאה בקובץ
+// O(M) – M = lines in one file
 function countErrorsInFile(filename) {
   const errorCounts = {};
   const lines = fs.readFileSync(filename, "utf-8").split("\n");
@@ -50,7 +49,7 @@ function countErrorsInFile(filename) {
   return errorCounts;
 }
 
-// ממזג את ספירת השגיאות מכל חלקי הלוגים
+// O(L) – total lines across all parts
 function mergeErrorCounts(parts) {
   const globalCounts = {};
 
@@ -65,19 +64,19 @@ function mergeErrorCounts(parts) {
   return globalCounts;
 }
 
-// מציאת ה-N שגיאות הנפוצות ביותר
+// O(E log E) – E = unique error types
 function getTopErrors(errorCounts, n) {
   return Object.entries(errorCounts)
-    .sort((a, b) => b[1] - a[1]) // ממיין בסדר יורד לפי כמות המופעים
+    .sort((a, b) => b[1] - a[1])
     .slice(0, n);
 }
 
-// הפעלת תהליך עיבוד הלוגים
+// O(L + E log E)
 async function processLogs() {
-  await splitLogFile(LOG_FILE); // חלוקת הלוגים לקבצים קטנים יותר
+  await splitLogFile(LOG_FILE);
   const partFiles = fs.readdirSync(OUTPUT_DIR).filter(f => f.startsWith("part_"));
-  const mergedCounts = mergeErrorCounts(partFiles); // מיזוג ספירות השגיאות
-  const topErrors = getTopErrors(mergedCounts, N); // חישוב השגיאות הנפוצות ביותר
+  const mergedCounts = mergeErrorCounts(partFiles);
+  const topErrors = getTopErrors(mergedCounts, N);
   console.log("Top", N, "Errors:", topErrors);
 }
 
