@@ -32,7 +32,7 @@ function splitDataByDay(row) {
 
   return {
     dayKey,
-    data: { timestamp: dateTimestamp, value }
+    data: { timestamp: dateTimestamp, value },
   };
 }
 
@@ -47,10 +47,7 @@ function saveToCSVFile(data) {
     .map(({ start_time, average }) => `${start_time},${average}`)
     .join("\n");
 
-  fs.writeFileSync(
-    outputCSVFile,
-    "start_time,average\n" + csvData
-  );
+  fs.writeFileSync(outputCSVFile, "start_time,average\n" + csvData);
 }
 
 // שמירת נתונים בקובץ Parquet
@@ -59,10 +56,7 @@ function saveToParquetFile(data) {
     .map(({ start_time, average }) => `${start_time},${average}`)
     .join("\n");
 
-  fs.writeFileSync(
-    outputParquetFile,
-    "start_time,average\n" + csvData
-  );
+  fs.writeFileSync(outputParquetFile, "start_time,average\n" + csvData);
 }
 
 // עיבוד קובץ CSV ויצירת קובץ סופי
@@ -149,7 +143,7 @@ async function processParquetFile(filePath) {
 
     saveToParquetFile(allParquetData);
   } catch (err) {
-    console.error("Error processing Parquet file:", err);
+    alert("Error processing Parquet file:", err);
   }
 }
 
@@ -168,7 +162,7 @@ processCSVFile(filePathCSV)
   .then(() => {
     console.log("Finished processing Parquet file.");
   })
-  .catch((err) => console.error("Error processing files:", err));
+  .catch((err) => alert("Error processing files:", err));
 
 /**
  * ניתוח סיבוכיות זמן ריצה:
@@ -178,7 +172,7 @@ processCSVFile(filePathCSV)
  * - כתיבה לקובץ CSV: O(N)
  * - כתיבה לקובץ Parquet: O(N)
  * -> סה"כ: O(N)
- * 
+ *
  * זמן הריצה כאן תלוי בכמות השורות שיש בקובץ.
  * אם מדובר בנתונים המתקבלים בזרימה (stream), אז נוכל לבצע את העיבוד בזמן אמת.
  * הזמן הכולל תלוי בעיקר בגודל הקובץ.
