@@ -9,10 +9,10 @@ const filePathParquet = path.join(__dirname, "time_series.parquet");
 const outputCSVFile = path.join(__dirname, "result_csv.csv");
 const outputParquetFile = path.join(__dirname, "result_parquet.csv");
 
-let allCSVData = []; // כל הנתונים שיתאספו עבור CSV
-let allParquetData = []; // כל הנתונים שיתאספו עבור Parquet
+let allCSVData = []; 
+let allParquetData = []; 
 
-// פיצול הנתונים
+// O(1) – constant time per row
 function splitDataByDay(row) {
   let timestamp = null;
 
@@ -36,12 +36,12 @@ function splitDataByDay(row) {
   };
 }
 
-// המרת זמן לפורמט קריא (לדוגמה: 28/06/2025 01:00)
+// O(1) – moment formatting is constant time
 function formatTimestamp(timestamp) {
   return moment(timestamp).format("DD/MM/YYYY HH:mm");
 }
 
-// שמירת נתונים בקובץ CSV
+// O(N) – N = number of output rows
 function saveToCSVFile(data) {
   const csvData = data
     .map(({ start_time, average }) => `${start_time},${average}`)
@@ -50,7 +50,7 @@ function saveToCSVFile(data) {
   fs.writeFileSync(outputCSVFile, "start_time,average\n" + csvData);
 }
 
-// שמירת נתונים בקובץ Parquet
+// O(N) – N = number of output rows
 function saveToParquetFile(data) {
   const csvData = data
     .map(({ start_time, average }) => `${start_time},${average}`)
@@ -59,7 +59,7 @@ function saveToParquetFile(data) {
   fs.writeFileSync(outputParquetFile, "start_time,average\n" + csvData);
 }
 
-// עיבוד קובץ CSV ויצירת קובץ סופי
+// O(R) – R = number of CSV rows
 function processCSVFile(filePath) {
   return new Promise((resolve, reject) => {
     const dailyData = {};
@@ -89,7 +89,7 @@ function processCSVFile(filePath) {
           Object.entries(hourlyData).forEach(([hour, { sum, count }]) => {
             const average = (sum / count).toFixed(2);
             allCSVData.push({
-              start_time: formatTimestamp(hour), // שימוש בפורמט קריא
+              start_time: formatTimestamp(hour), 
               average,
             });
           });
@@ -102,7 +102,7 @@ function processCSVFile(filePath) {
   });
 }
 
-// עיבוד קובץ Parquet ויצירת קובץ סופי
+// O(R) – R = number of Parquet rows
 async function processParquetFile(filePath) {
   try {
     const reader = await parquet.ParquetReader.openFile(filePath);
@@ -135,7 +135,7 @@ async function processParquetFile(filePath) {
       Object.entries(hourlyData).forEach(([hour, { sum, count }]) => {
         const average = (sum / count).toFixed(2);
         allParquetData.push({
-          start_time: formatTimestamp(hour), // שימוש בפורמט קריא
+          start_time: formatTimestamp(hour), 
           average,
         });
       });
@@ -143,17 +143,16 @@ async function processParquetFile(filePath) {
 
     saveToParquetFile(allParquetData);
   } catch (err) {
-    alert("Error processing Parquet file:", err);
+    console.log("Error processing Parquet file:", err);
   }
 }
 
-// המרת timestamp לפורמט סטנדרטי
+// O(1) – fixed parsing logic
 function parseTimestamp(timestamp) {
   const [day, month, year, hour, minute] = timestamp.split(/[\/: ]/);
   return `${year}-${month}-${day}T${hour}:${minute}:00`;
 }
 
-// הפעלת תהליך העיבוד
 processCSVFile(filePathCSV)
   .then(() => {
     console.log("Finished processing CSV file.");
@@ -162,18 +161,8 @@ processCSVFile(filePathCSV)
   .then(() => {
     console.log("Finished processing Parquet file.");
   })
-  .catch((err) => alert("Error processing files:", err));
+  .catch((err) => console.log("Error processing files:", err));
 
-/**
- * ניתוח סיבוכיות זמן ריצה:
- * - קריאת כל שורה: O(N) (עובר על N שורות בקובץ)
- * - סידור לקבוצות שעות: O(N)
- * - חישוב ממוצע לכל שעה: O(N)
- * - כתיבה לקובץ CSV: O(N)
- * - כתיבה לקובץ Parquet: O(N)
- * -> סה"כ: O(N)
- *
- * זמן הריצה כאן תלוי בכמות השורות שיש בקובץ.
- * אם מדובר בנתונים המתקבלים בזרימה (stream), אז נוכל לבצע את העיבוד בזמן אמת.
- * הזמן הכולל תלוי בעיקר בגודל הקובץ.
- */
+// כאשר הנתונים מתקבלים בצורה של זרימה, כל שורה שנכנסת מעובדת מיד - מחושבת לה השעה המתאימה (בדיוק כמו קודם),
+// ומעדכנים במבנה נתונים בזיכרון את הסכום והכמות של הערכים לאותה שעה. אחת לכמה זמן (או כשהשעה מתחלפת),
+// ניתן לשמור את הממוצע לקובץ או לבסיס נתונים, כך שלא נחכה לסיום קובץ אלא מעבדים הכל בזמן אמת.
